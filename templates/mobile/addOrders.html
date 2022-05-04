@@ -1,0 +1,137 @@
+{% extends 'mobile/base.html' %}
+{% load static from staticfiles %}
+
+{% block mainbody %}
+	<!--头部-->
+	<header>
+		<div class="header">
+			<h1>提交订单</h1>
+			<a href="javascript:window.history.back();" class="return"><i></i></a>
+		</div>
+	</header>
+	
+	<!--内容区-->
+	<article class="main-container add-product">
+
+		<!--产品-->
+		<div class="list-content cartlist order-Pro">
+			<ul>
+				{% for pdt in request.session.cartlist.values %}
+				<li class="line">
+					<a href="#"><div class="pro-img"><img src="{% static 'uploads/product/' %}{{pdt.cover_pic}}" alt=""></div></a>
+					<div class="pro-con"><h3> {{pdt.name}}</h3><b>￥{{pdt.price}}<s>￥{{pdt.price|add:12}}</s></b>&times;{{pdt.num}}</div>
+				</li>
+				{% endfor %}
+				
+
+			</ul>
+		</div>
+			
+		
+		
+		<!--支付方式-->
+		<div class="order-Delivery line" id="orderPays">
+			<p>支付方式</p>
+			<ol class="FilterContentList">
+			</ol>
+			<div class="list">
+				<ul class="line">
+					<li class="select" bank="4"><i class="icon-alipay"></i>支付宝支付<em class="icon-correct"></em></li>
+					<li bank="1"><i class="icon-weixinpay"></i>微信支付<em class="icon-correct"></em></li>
+				</ul>
+			</div>
+		</div>
+		
+		<br><br>
+
+	</article>
+
+	<!--底部栏目-->
+	<footer>
+		<div class="button" onclick="doSubmit()"><button>提交订单</button></div>
+		<h4>实付款：¥{{request.session.total_money}}</h4>
+	</footer>
+
+{% endblock %}
+
+{% block myjavascript %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		//配送方式
+		$("#orderDelivery ol li").bind('click',function(){
+			
+			if($(this).index()==0){
+				$("#orderPays").show();
+				$("#orderDelivery ol li:nth-child(1) span").addClass("select icon-correct");
+				$("#orderDelivery ol li:nth-child(2) span").removeClass();
+				$("#orderDelivery .order-Delivery-Pick").hide();
+			}else{
+				$("#orderPays").hide();
+				$("#orderDelivery ol li:nth-child(1) span").removeClass();
+				$("#orderDelivery ol li:nth-child(2) span").addClass("select icon-correct");
+				$("#orderDelivery .order-Delivery-Pick").show();
+			}
+			
+		})
+		//支付方式
+		$("#orderPays ol li").bind('click',function(){
+			
+			if($(this).index()==0){
+				$("#orderPays ol li:nth-child(1) span").addClass("select icon-correct");
+				$("#orderPays ol li:nth-child(2) span").removeClass();
+				$("#orderPays ul").show();
+			}else{
+				$("#orderPays ol li:nth-child(1) span").removeClass();
+				$("#orderPays ol li:nth-child(2) span").addClass("select icon-correct");
+				$("#orderPays ul").hide();
+			}
+			
+		})
+		
+		//支付方式
+		$("#orderPays ul li").bind('click',function(){
+			
+			if($(this).index()==0){
+				$("#orderPays ul li:nth-child(1)").addClass("select");
+				$("#orderPays ul li:nth-child(2)").removeClass();
+			}else{
+				$("#orderPays ul li:nth-child(1)").removeClass();
+				$("#orderPays ul li:nth-child(2)").addClass("select");
+			}
+			
+		})
+		
+		var o = document.getElementById('date');
+    o.onfocus = function(){
+        this.removeAttribute('placeholder');
+    };
+    o.onblur = function(){
+        if(this.value == '') this.setAttribute('placeholder','配送日期');
+    };
+    var o = document.getElementById('time');
+    o.onfocus = function(){
+        this.removeAttribute('placeholder');
+    };
+    o.onblur = function(){
+        if(this.value == '') this.setAttribute('placeholder','配送时间');
+    };
+    
+	})
+	
+</script>
+
+<script type="text/javascript">
+    //支付方式上的单选按钮点击效果
+    $("ul.line li").click(function(){
+        $("ul.line li").removeClass("select");
+        $(this).addClass("select");
+    });
+
+    //执行订单提交操作函数
+    function doSubmit(){
+        bid = $("ul.line li.select").attr("bank"); //获取支付方式
+        window.location.href="{% url 'mobile_doaddorders' %}?bank="+bid;
+    }
+</script>
+
+{% endblock %}

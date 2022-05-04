@@ -1,0 +1,78 @@
+{% extends "myadmin/base.html" %}
+
+{% block main_body %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        会员管理
+        <small>订餐系统后台管理</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li class="active">会员管理</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+                <h2 class="box-title"> <span class="glyphicon glyphicon-calendar" aria-hidden="true">编辑会员信息</h2>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal" action="{% url 'myadmin_member_update' member.id %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">会员昵称：</label>
+                  <div class="col-sm-4">
+                    <input type="text" name="nickname" value="{{ member.nickname }}" class="form-control" id="inputText1" placeholder="昵称" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">联系电话：</label>
+                  <div class="col-sm-4">
+                    <input type="text" name="mobile" value="{{ member.mobile }}" class="form-control" id="inputText2" placeholder="联系电话" />
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">当前状态：</label>
+                  <div class="controls">
+                    &nbsp; &nbsp;
+                    <input type="radio" name="status" class="input-xlarge" value="1" 
+                    {% if member.status == 1 %}checked{% endif %} /> 正常
+                     &nbsp; &nbsp; 
+                    <input type="radio" name="status" class="input-xlarge" value="2" 
+                    {% if member.status == 2 %}checked{% endif %} /> 禁用
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">个人头像：</label>
+                  <div class="col-sm-4">
+                    <input type="file" name="avatar" />
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-primary">保存</button> &nbsp; 
+                  <button type="submit" class="btn btn-default">重置</button>
+                <div class="col-sm-offset-2 col-sm-10">
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+
+    </section>
+    <!-- /.content -->
+{% endblock %}
